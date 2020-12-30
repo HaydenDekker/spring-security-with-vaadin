@@ -6,9 +6,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
 
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.core.GrantedAuthority;
@@ -27,7 +25,6 @@ import com.hdekker.security.users.repo.UserRequestRepository;
 
 
 @Service
-@Transactional
 @DependsOn("passwordEncoder")
 public class UserManagementService {
 
@@ -87,12 +84,14 @@ public class UserManagementService {
 		
 		List<ApprovedUser> users = approvedUserRepository.findAll().stream()
 				.filter(user->!user.getIsActive().equals(false)).collect(Collectors.toList());
-		users.stream().forEach(user->{
-			
-			Hibernate.initialize(user.getUser());
-			Hibernate.initialize(user.getUserCredentials());
-			
-		});
+		
+		// TODO move database dependencies our of class
+//		users.stream().forEach(user->{
+//			
+//			Hibernate.initialize(user.getUser());
+//			Hibernate.initialize(user.getUserCredentials());
+//			
+//		});
 		
 		return users;
 		
@@ -112,7 +111,8 @@ public class UserManagementService {
 		user.setEmail(email);
 		user.setUserName(email); 
 		
-		uc.setCredientials(Arrays.asList(role));
+		// what did I mean by credentials.... Roles???
+		//uc.setCredientials(Arrays.asList(role));
 		uc.setPassWord(passwordEncoder.encode(password));
 		uc.setUserName(email);
 		
@@ -133,10 +133,10 @@ public class UserManagementService {
 	public Optional<UserCredentials> findUserByUserName(String name) {
 		
 			UserCredentials us = userCredentialsRepository.findFirstByUserName(name);
-			if(us!=null) {
-				Hibernate.initialize(us.getCredientials());
-				return Optional.of(us);
-			}
+//			if(us!=null) {
+//				Hibernate.initialize(us.getCredientials());
+//				return Optional.of(us);
+//			}
 			return Optional.empty();
 		
 	}

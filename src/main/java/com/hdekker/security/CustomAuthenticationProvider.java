@@ -41,8 +41,8 @@ public class CustomAuthenticationProvider implements AuthenticationProvider{
          
         Optional<UserCredentials> userCreds = userManagementService.findUserByUserName(name);
         if(!userCreds.isPresent()) return null;
-        List<String> userCredList = userCreds.get().getCredientials();
-        String userRole = userCredList.get(0);
+        List<String> userRoles = userCreds.get().getRoles();
+        String userRole = userRoles.get(0);
         
         List<GrantedAuthority> gas = AuthorityUtils.createAuthorityList(userRole);
         	

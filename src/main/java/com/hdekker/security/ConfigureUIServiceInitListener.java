@@ -1,6 +1,8 @@
 package com.hdekker.security;
 
 
+import com.hdekker.security.configuration.SecurityConfiguration;
+import com.hdekker.security.configuration.SecurityUtils;
 import com.hdekker.security.routes.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
@@ -25,21 +27,12 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 		
 		log.info("Vaain service initialised event called " + event.getSource());
 		
-		/*event.getSource().addSessionInitListener((session)->{
-			
-		
-			
-		});*/
-		
 		event.getSource().addUIInitListener(uiEvent -> {
 			final UI ui = uiEvent.getUI();
 			ui.addBeforeEnterListener(this::beforeEnter);
 			
 		});
 	}
-	
-	//@Autowired
-	//VaadinApplicationSecurityContext appSecContext;
 
 	/**
 	 * Reroutes the user if (s)he is not authorized to access the view.

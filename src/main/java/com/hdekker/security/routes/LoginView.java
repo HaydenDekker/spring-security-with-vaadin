@@ -39,50 +39,16 @@ public class LoginView extends VerticalLayout {
 		getElement().getStyle().set("align-items", "center");
 		getElement().getStyle().set("justify-content", "center");
 		
-		//H1 rsaApplicationsHeader = new H1("RSApps");
-		//H3 beta = new H3("beta");
-		
-		/*TextField userNameTextField = new TextField();
-		userNameTextField.focus();
-		userNameTextField.setPlaceholder("email");
-		userNameTextField.getElement().setAttribute("name", "username");
-		userNameTextField.setAutocomplete(Autocomplete.USERNAME);
-		PasswordField passwordField = new PasswordField();
-		passwordField.setPlaceholder("password");
-		passwordField.getElement().setAttribute("name", "password");
-		passwordField.setAutocomplete(Autocomplete.NEW_PASSWORD);
-		Button submitButton = new Button("Login");
-		submitButton.setId("submitbutton");*/
-		//UI.getCurrent().executeJs();
-		//UI.getCurrent().getPage().executeJavaScript("document.getElementById('submitbutton').addEventListener('click', () => document.getElementById('ironform').submit());");
-
-		/*FormLayout formLayout = new FormLayout();
-		formLayout.add(userNameTextField, passwordField, submitButton);
-
-		Element formElement = new Element("form");
-		formElement.setAttribute("method", "POST");
-		formElement.setAttribute("action", "login");
-		formElement.appendChild(formLayout.getElement());
-
-		Element ironForm = new Element("iron-form");
-		ironForm.setAttribute("id", "ironform");
-		ironForm.setAttribute("allow-redirect", true);
-		ironForm.appendChild(formElement);*/
-
 		add(centerLayout);
 		centerLayout.setId("center-layout");
 		Div header = new Div();
 		header.setClassName(AppStyle.HOZLAYOUT);
-		//header.add(rsaApplicationsHeader, beta);
 		centerLayout.add(header);
-		//centerLayout.getElement().appendChild(ironForm);
 		
 		requestAccess.setText("sign up");
 		requestAccess.setClassName("align-start");
-		//centerLayout.add(requestAccess);
 		
-		getElement().getStyle().set("background-color", "#67aae4");
-		
+		getElement().getStyle().set("background-color", "#67aae4");	
 		setClassName("login-view");
 		
 		centerLayout.add(component);
