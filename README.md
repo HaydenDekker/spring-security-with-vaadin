@@ -1,22 +1,14 @@
 # Custom project from start.vaadin.com
 
-This project was created from https://start.vaadin.com. It's a fully working Vaadin application that you continue developing locally.
-It has all the necessary dependencies and files to help you get going. 
+This project was created from https://start.vaadin.com.
 
-The project is a standard Maven project, so you can import it to your IDE of choice. You'll need to have Java 8+ and Node.js 10+ installed.
+This module packages the Vaadin Security tutorial into a module that can easily added to any existing spring application.
 
-To run from the command line, use `mvn spring-boot:run` and open [http://localhost:8080](http://localhost:8080) in your browser.
+See tutorial here https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security
 
-## Project structure
-
-- `MainView.java` in `src/main/java` contains the navigation setup. It uses [App Layout](https://vaadin.com/components/vaadin-app-layout).
-- `views` package in `src/main/java` contains the server-side Java views of your application.
-- `views` folder in `frontend/src/` contains the client-side JavaScript views of your application.
-
-## What next?
-
-[vaadin.com](https://vaadin.com) has lots of material to help you get you started:
-
- - Follow the tutorials in [vaadin.com/tutorials](https://vaadin.com/tutorials). Especially [vaadin.com/tutorials/getting-started-with-flow](https://vaadin.com/tutorials/getting-started-with-flow) is good for getting a grasp of the basic Vaadin concepts.
- - Read the documentation in [vaadin.com/docs](https://vaadin.com/docs).
- - For a bigger Vaadin application example, check out the Full Stack App starter from [vaadin.com/start](https://vaadin.com/start).
+# Starting
+This release provides an integration with mysql db.
+1. Add this module as a dependency in the POM, 
+2. Add the @ComponentScan(basePackages = {"com.hdekker.security",.. annotations to the application class
+3. Add the @EnableVaadin(value = {"com.hdekker.security",.. annotations to the application class
+4. Add the specific database configuration to the application.proprerties file.
