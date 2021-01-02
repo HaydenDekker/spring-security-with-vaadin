@@ -3,14 +3,6 @@ package com.hdekker.security.users.data;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-
-@Entity
 public class ApprovedUser {
 
 	Integer id;
@@ -20,8 +12,6 @@ public class ApprovedUser {
 	LocalDateTime lastActiveOn;
 	Boolean isActive;
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}
@@ -37,15 +27,13 @@ public class ApprovedUser {
 	public void setIsActive(Boolean isActive) {
 		this.isActive = isActive;
 	}
-	@OneToOne
+	
 	public User getUser() {
 		return user;
 	}
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
-	@OneToOne
 	public UserCredentials getUserCredentials() {
 		return userCredentials;
 	}

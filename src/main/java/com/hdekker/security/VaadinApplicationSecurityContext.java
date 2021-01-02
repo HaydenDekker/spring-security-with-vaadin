@@ -31,7 +31,7 @@ public class VaadinApplicationSecurityContext {
 			
 		}else {
 			
-			userProfile = approvedUserRepository.findAll().get(0);
+			//userProfile = approvedUserRepository.findAll().get(0);
 			log.info("A user session for " + userProfile.getUser().getEmail() + " has just been created.");
 			
 		}

@@ -15,7 +15,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
-import com.hdekker.security.ConfigureUIServiceInitListener;
 import com.hdekker.security.CustomAuthenticationProvider;
 import com.hdekker.security.users.UserManagementService;
 import com.hdekker.security.users.data.ApprovedUser;

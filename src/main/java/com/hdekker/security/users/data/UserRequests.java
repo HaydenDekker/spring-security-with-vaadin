@@ -1,9 +1,5 @@
 package com.hdekker.security.users.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 /**
  * A class to allow users to request access to the
@@ -12,7 +8,7 @@ import javax.persistence.Id;
  * @author hdekker
  *
  */
-@Entity
+
 public class UserRequests {
 
 	Integer id;
@@ -20,8 +16,6 @@ public class UserRequests {
 	String firstName;
 	String secondName;
 	
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}

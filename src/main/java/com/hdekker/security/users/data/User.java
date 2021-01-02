@@ -1,14 +1,6 @@
 package com.hdekker.security.users.data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
-import com.hdekker.security.users.UserDisplayable;
-
-@Entity
-public class User implements UserDisplayable{
+public class User{
 
 	Integer id;
 	String firstName;
@@ -28,8 +20,6 @@ public class User implements UserDisplayable{
 	public void setSecondName(String secondName) {
 		this.secondName = secondName;
 	} 
-	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public Integer getId() {
 		return id;
 	}

@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.hdekker.security.ConfigureUIServiceInitListener;
+import com.hdekker.security.configuration.ConfigureUIServiceInitListener;
 import com.hdekker.security.users.data.ApprovedUser;
 import com.hdekker.security.users.data.User;
 import com.hdekker.security.users.data.UserCredentials;
@@ -82,8 +82,8 @@ public class UserManagementService {
 	
 	public List<ApprovedUser> getAllApprovedUsers(){
 		
-		List<ApprovedUser> users = approvedUserRepository.findAll().stream()
-				.filter(user->!user.getIsActive().equals(false)).collect(Collectors.toList());
+		//List<ApprovedUser> users = approvedUserRepository.findAll().stream()
+		//		.filter(user->!user.getIsActive().equals(false)).collect(Collectors.toList());
 		
 		// TODO move database dependencies our of class
 //		users.stream().forEach(user->{
@@ -93,7 +93,7 @@ public class UserManagementService {
 //			
 //		});
 		
-		return users;
+		return null;//users;
 		
 	}
 
