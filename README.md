@@ -2,17 +2,32 @@
 
 Add security in three simple steps: POM declaration, database configuration and application annotations.
 
-Here, the Vaadin Security tutorial is packaged into a module that can easily added to any existing spring application. The selected database is DynamoDB.
+Here, the Vaadin Security tutorial is packaged into a module that can easily added to any existing spring application. The integrated database is DynamoDB.
 
 https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security
 
-## Use
+## Functional Overview
+
+* Application looks to configured table to authenticate and authorise users.
+* Creates a temp user if no users are found on the table. usr=admin, pw=admin (does not force deletion of temp user.)
+* Ensures at least one user must always have the role ADMIN.
+* Provides a UI view that allows ADMIN's to invite other users and assign them suitable ROLES. (Roles dependent on the developers view specification)
+* Allows developers to bolt on security then define the specific roles as they develop each application view. 
+
+For Simplicity, it does not,
+
+* Allow users to sign up. (Can be extended to allow this).
+* Allow multi-tenants/organisations to be used on the same application. (This could be extended by the developer)
+
+
+## How to use
 
 * Simply add the dependency to the application POM.
-* Add the spring annotations
-* Add an authorized IAM user to connect to DynamoDB
-* Manually create and declare the DynamoDB table in AWS
-* Add the public routes or use the required annotation
+* Add the spring annotations, (@ComponentScan(), @EnableVaadin()).
+* Add an authorized IAM user to connect to DynamoDB, preferably using an ENV variable.
+* Manually create and declare the DynamoDB table in AWS. (Better control IAM user privilege)
+* Add secure routes spring annotation @secure and the required roles as you develop views
+* Change master admin password - First time application start, if no users exist in AWS table app will create a temporary ADMIN password.
 
 
 ## Deviation from Tutorial
@@ -23,14 +38,19 @@ Step 1 - setting-up-spring-security
 * Didn’t use the ErrorMVCAutoConfiguration.class, not sure what this did.
 * Added a SavedRequestAwareAuthenticationSuccessHandler.... not sure why...
 * SecurityConfiguration.class - Added a check for the datasource approved users and if not present an Admin is created.
-* HasPublicRoutes interface created to initialise the applications public routes, all else remain private.
 
-## Access Patterns
+Step 5 - fine-grained-access-control
 
-* Get user credentials by username
+* Change public by default to secured by default. In function isAccessGranted() if no @Secure is detected then the route is not allowed. Meaning programmer must define a role anonymous for each public route.
+
+## Database Access Patterns
+
+See DDBApplicationData.class for full spec.
+
+* Get user by username
 * Get all users
-* Check if user exists
+* Save user by username
 
-Key | SortKey | Attributes
+key | sKey | Attributes
 ----|---------|-----------
-'User' | UserId | UserName | Roles | Password
+'U' | UserName | Name - Roles - Password - Created On

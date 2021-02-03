@@ -4,6 +4,10 @@ import com.vaadin.flow.server.HandlerHelper.RequestType;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.ApplicationConstants;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -63,11 +67,35 @@ public final class SecurityUtils {
 		
 	}
 
-	public static boolean userHasRole(String...role) { 
+	public static boolean userHasRoles(String...role) { 
 		
 		List<String> roles = Arrays.asList(role);
 		List<GrantedAuthority> gauth = SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream().collect(Collectors.toList());
 		return gauth.stream().filter(r->roles.contains(r.getAuthority())).findAny().isPresent();
 		
+	}
+	
+	/**
+	 * As per Vaadin tutorial, except false by default
+	 * 
+	 * @param securedClass
+	 * @return
+	 */
+	public static boolean isAccessGranted(Class<?> securedClass) {
+	    // Allow if no roles are required.
+	    Secured secured = AnnotationUtils.findAnnotation(securedClass, Secured.class);
+	    if (secured == null) {
+	       return false;
+	    }
+
+	    // lookup needed role in user roles
+	    // Anonymous users can always see must be assigned an anonymous role. How?
+	    List<String> allowedRoles = Arrays.asList(secured.value());
+	    if(allowedRoles.contains(SecurityBaseRoles.PUBLIC)) return true;
+	    
+	    Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();
+	    return userAuthentication.getAuthorities().stream() // 
+	            .map(GrantedAuthority::getAuthority)
+	            .anyMatch(allowedRoles::contains);
 	}
 }

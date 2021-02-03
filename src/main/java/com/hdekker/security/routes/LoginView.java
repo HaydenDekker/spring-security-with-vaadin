@@ -1,5 +1,9 @@
 package com.hdekker.security.routes;
 
+import org.springframework.security.access.annotation.Secured;
+
+import com.hdekker.security.configuration.SecurityBaseRoles;
+import com.hdekker.security.configuration.SecurityUtils;
 import com.vaadin.flow.component.dependency.HtmlImport;
 import com.vaadin.flow.component.dependency.JsModule;
 import com.vaadin.flow.component.dependency.NpmPackage;
@@ -22,7 +26,9 @@ import com.vaadin.flow.router.Route;
 @PageTitle("Login")
 @NpmPackage(value = "@polymer/iron-form", version = "3.0.1")
 @JsModule("@polymer/iron-form/iron-form.js")
+@Secured(value = {SecurityBaseRoles.PUBLIC})
 public class LoginView extends VerticalLayout {
+	
 	public static final String ROUTE = "login";
 	
 	Div centerLayout = new Div();

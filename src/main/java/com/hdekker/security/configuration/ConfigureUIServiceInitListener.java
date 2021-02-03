@@ -4,7 +4,7 @@ package com.hdekker.security.configuration;
 import com.hdekker.security.routes.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
-import com.vaadin.flow.router.RouteConfiguration;
+import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
@@ -15,17 +15,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigureUIServiceInitListener implements VaadinServiceInitListener {
 
-	public static final String ROLE_ADMIN = "ADMIN";
-	public static final String ROLE_AUTHOR = "AUTHOR";
-	
 	Logger log = LoggerFactory.getLogger(ConfigureUIServiceInitListener.class);
 	
 	@Override
 	public void serviceInit(ServiceInitEvent event) {
 		
-		log.info("Vaain service initialised event called " + event.getSource());
-		
+		log.debug("Step 1: Add a UIInitListener - A user has accessed the for first time and the Vaadin service initialised event has been called.");
 		event.getSource().addUIInitListener(uiEvent -> {
+			
+			log.debug("A new UI listener has been created. Adding a BeforeEnterListener to the UI to ensure security is checked.");
 			final UI ui = uiEvent.getUI();
 			ui.addBeforeEnterListener(this::beforeEnter);
 			
@@ -33,30 +31,40 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 	}
 
 	/**
-	 * Reroutes the user if (s)he is not authorized to access the view.
+	 * Reroutes the user if they are not authorized to access the view.
+	 * 
+	 * https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security/fine-grained-access-control
+	 *
+	 * But added LoginView class to ensure we don't create a circular reroute.
 	 *
 	 * @param event
 	 *            before navigation event with event details
 	 */
 	private void beforeEnter(BeforeEnterEvent event) {	
 		
-		if(SecurityConfiguration.securityEnabled) {
+		log.debug("User has attempted to enter " + event.getNavigationTarget().getCanonicalName() + " for UI " + UI.getCurrent().getUIId());
 		
-			// Unless view adopts a PublicRouteInterface we want to restrict navigation
-			if (!LoginView.class.equals(event.getNavigationTarget())
-			    && !SecurityUtils.isUserLoggedIn()) {
-				
-				String route = RouteConfiguration.forApplicationScope().getUrl((Class<? extends com.vaadin.flow.component.Component>) event.getNavigationTarget());
-				
-				if(route.equals("") || route.contains("stories")) {
-					 
+		if(!SecurityUtils.isAccessGranted(event.getNavigationTarget())) { 
+			if(SecurityUtils.isUserLoggedIn()) {
+				// If user is logged in and route is Vaadin standard route then
+				// they shall pass.
+				if(event.getNavigationTarget().getPackageName().contains("vaadin.flow.router")) {
+					log.debug("GRANTED - VAADIN INTERNAL - LOGGED IN.");
 					return;
 				}
+				log.debug("NOT GRANTED - LOGGED IN.");
+				event.rerouteToError(NotFoundException.class);
+				return;
+			}else {
+				
+				// TODO should Vaadin be granted when not logged in?? hmmm
+				log.debug("NOT GRANTED - NOT LOGGED IN.");
+				
 				event.rerouteTo(LoginView.class);
 				return;
 			}
+			
 		}
-		
-		
+		log.debug("GRANTED");	
 	}
 }

@@ -7,10 +7,16 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import com.hdekker.security.configuration.SecurityConfiguration;
-import com.hdekker.security.users.data.ApprovedUser;
-import com.hdekker.security.users.repo.ApprovedUserRepository;
+import com.hdekker.security.services.UserService;
+import com.hdekker.security.services.data.User;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 
+/**
+ * 
+ * TODO what is this actually for?
+ * @author HDekker
+ *
+ */
 @Service
 @VaadinSessionScope
 public class VaadinApplicationSecurityContext {
@@ -18,24 +24,19 @@ public class VaadinApplicationSecurityContext {
 	Logger log = LoggerFactory.getLogger(VaadinApplicationSecurityContext.class);
 	
 	@Autowired
-	ApprovedUserRepository approvedUserRepository;
+	UserService userService;
 	
-	public ApprovedUser getApprovedUser() {
+	public User getApprovedUser() {
 		
-		ApprovedUser userProfile = null;
-		
-		if(SecurityConfiguration.securityEnabled) {
+		User userProfile = null;
 			
-			userProfile = (ApprovedUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-			log.info("A user session for " + userProfile.getUser().getEmail() + " has just been created.");
-			
-		}else {
-			
+			//TODO reimplement a suitable log.
+			userProfile = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+			//log.info("A user session for " + userProfile.getUser().getEmail() + " has just been created.");
+	
 			//userProfile = approvedUserRepository.findAll().get(0);
-			log.info("A user session for " + userProfile.getUser().getEmail() + " has just been created.");
+			//log.info("A user session for " + userProfile.getUser().getEmail() + " has just been created.");
 			
-		}
-		
 		return userProfile;
 		
 	}
