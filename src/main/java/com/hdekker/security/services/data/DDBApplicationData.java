@@ -1,17 +1,9 @@
 package com.hdekker.security.services.data;
 
-import static com.hdekker.security.services.data.DDBApplicationData.PK_USER_ROLE;
-import static com.hdekker.security.services.data.DDBApplicationData.attB;
-
 import java.time.format.DateTimeFormatter;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
-
 import org.apache.commons.lang3.tuple.Pair;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 

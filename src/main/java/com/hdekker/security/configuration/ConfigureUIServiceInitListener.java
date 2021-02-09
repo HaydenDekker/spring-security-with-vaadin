@@ -8,13 +8,21 @@ import com.vaadin.flow.router.NotFoundException;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
+import java.util.Optional;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ConfigureUIServiceInitListener implements VaadinServiceInitListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Logger log = LoggerFactory.getLogger(ConfigureUIServiceInitListener.class);
 	
 	@Override
@@ -29,7 +37,10 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 			
 		});
 	}
-
+	
+	@Autowired
+	ApplicationContext ctx;
+	
 	/**
 	 * Reroutes the user if they are not authorized to access the view.
 	 * 
@@ -40,9 +51,12 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 	 * @param event
 	 *            before navigation event with event details
 	 */
+	
 	private void beforeEnter(BeforeEnterEvent event) {	
 		
 		log.debug("User has attempted to enter " + event.getNavigationTarget().getCanonicalName() + " for UI " + UI.getCurrent().getUIId());
+		
+		UserRedirect ur = ctx.getBean(UserRedirect.class);
 		
 		if(!SecurityUtils.isAccessGranted(event.getNavigationTarget())) { 
 			if(SecurityUtils.isUserLoggedIn()) {
@@ -57,6 +71,7 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 				return;
 			}else {
 				
+				ur.setOptRedirect(Optional.of(event.getLocation().getPath()));
 				// TODO should Vaadin be granted when not logged in?? hmmm
 				log.debug("NOT GRANTED - NOT LOGGED IN.");
 				

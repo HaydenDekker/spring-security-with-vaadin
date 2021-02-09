@@ -12,7 +12,7 @@ https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security
 * Creates a temp user if no users are found on the table. usr=admin, pw=admin (does not force deletion of temp user.)
 * Ensures at least one user must always have the role ADMIN.
 * Provides a UI view that allows ADMIN's to invite other users and assign them suitable ROLES. (Roles dependent on the developers view specification)
-* Allows developers to bolt on security then define the specific roles as they develop each application view. 
+* Allows developers to bolt on security then define the specific roles as they develop each application view. Or use a HasViewAuthorisation interface to control access to views. The latter allowing decoupling security from the view.
 
 For Simplicity, it does not,
 
@@ -26,7 +26,7 @@ For Simplicity, it does not,
 * Add the spring annotations, (@ComponentScan(), @EnableVaadin()).
 * Add an authorized IAM user to connect to DynamoDB, preferably using an ENV variable.
 * Manually create and declare the DynamoDB table in AWS. (Better control IAM user privilege)
-* Add secure routes spring annotation @secure and the required roles as you develop views
+* Add secure routes and the required roles as you develop views using SecurityUtils static add method.
 * Change master admin password - First time application start, if no users exist in AWS table app will create a temporary ADMIN password.
 
 
@@ -36,7 +36,7 @@ Step 1 - setting-up-spring-security
 
 * Didn’t use the two maven repos, just a signle spring spring-boot-starter-security
 * Didn’t use the ErrorMVCAutoConfiguration.class, not sure what this did.
-* Added a SavedRequestAwareAuthenticationSuccessHandler.... not sure why...
+* Didn't use anyRequest permited, as vaadin takes care of auth.
 * SecurityConfiguration.class - Added a check for the datasource approved users and if not present an Admin is created.
 
 Step 5 - fine-grained-access-control

@@ -3,12 +3,12 @@
     <groupId>com.hdekker</groupId>
     <artifactId>security</artifactId>
     <name>security</name>
-    <version>4.0-SNAPSHOT</version>
+    <version>4.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 

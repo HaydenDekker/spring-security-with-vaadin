@@ -4,13 +4,8 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.annotation.Secured;
-
-import com.hdekker.security.configuration.SecurityBaseRoles;
-import com.hdekker.security.configuration.SecurityUtils;
 import com.hdekker.security.services.UserService;
 import com.hdekker.security.services.data.User;
-import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.html.Div;
 import com.vaadin.flow.component.notification.Notification;
@@ -25,9 +20,12 @@ import com.vaadin.flow.router.Route;
 
 @Push
 @Route(value = "users/list")
-@Secured(value = {SecurityBaseRoles.ADMIN})
 public class ListAllUsers extends VerticalLayout implements AfterNavigationObserver{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Grid<String> users = new Grid<>();
 	
 	public ListAllUsers() {

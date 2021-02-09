@@ -1,21 +1,14 @@
 package com.hdekker.security.services;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.DependsOn;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.hdekker.security.configuration.ConfigureUIServiceInitListener;
 import com.hdekker.security.services.data.DyanmoDBDAO;
 import com.hdekker.security.services.data.User;
 

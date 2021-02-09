@@ -1,13 +1,10 @@
 package com.hdekker.security.configuration;
 
+import com.vaadin.flow.component.Component;
 import com.vaadin.flow.server.HandlerHelper.RequestType;
 import com.vaadin.flow.server.VaadinSession;
 import com.vaadin.flow.shared.ApplicationConstants;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,8 +12,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.servlet.http.HttpServletRequest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -26,6 +27,12 @@ import java.util.stream.Stream;
  *
  */
 public final class SecurityUtils {
+	
+	private static Map<Class<? extends Component>, List<String>> viewAuth = new HashMap<>();
+	
+	public static void addRouteAuthorisation(Class<? extends Component> clazz, List<String> auth) {
+		viewAuth.put(clazz, auth);
+	}
 	
 	private SecurityUtils() {
 		// Util methods only
@@ -50,7 +57,7 @@ public final class SecurityUtils {
 	 * Tests if some user is authenticated. As Spring Security always will create an {@link AnonymousAuthenticationToken}
 	 * we have to ignore those tokens explicitly.
 	 */
-	static boolean isUserLoggedIn() {
+	public static boolean isUserLoggedIn() {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		return authentication != null
@@ -76,21 +83,26 @@ public final class SecurityUtils {
 	}
 	
 	/**
-	 * As per Vaadin tutorial, except false by default
+	 * As per Vaadin tutorial, except:
+	 * - false by default
+	 * - Uses static method to declare security so that modules do not require
+	 *   @Secure() annotation. The programmer should use this interface to 
+	 *   declare static config in a top level module.
+	 * 
 	 * 
 	 * @param securedClass
 	 * @return
 	 */
 	public static boolean isAccessGranted(Class<?> securedClass) {
+		
 	    // Allow if no roles are required.
-	    Secured secured = AnnotationUtils.findAnnotation(securedClass, Secured.class);
-	    if (secured == null) {
+		if (!viewAuth.containsKey(securedClass)) {
 	       return false;
 	    }
 
 	    // lookup needed role in user roles
 	    // Anonymous users can always see must be assigned an anonymous role. How?
-	    List<String> allowedRoles = Arrays.asList(secured.value());
+	    List<String> allowedRoles = Optional.ofNullable(viewAuth.get(securedClass)).orElse(new ArrayList<>());
 	    if(allowedRoles.contains(SecurityBaseRoles.PUBLIC)) return true;
 	    
 	    Authentication userAuthentication = SecurityContextHolder.getContext().getAuthentication();

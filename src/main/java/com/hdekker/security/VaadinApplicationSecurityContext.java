@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import com.hdekker.security.configuration.SecurityConfiguration;
 import com.hdekker.security.services.UserService;
 import com.hdekker.security.services.data.User;
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
