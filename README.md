@@ -1,10 +1,12 @@
-# Spring Security Module for Vaadin 14
+# Security Module for Spring Vaadin 14 Projects
 
-Add security in three simple steps: POM declaration, database configuration and application annotations.
+Add a simple application security in a few simple steps.
 
-Here, the Vaadin Security tutorial is packaged into a module that can easily added to any existing spring application. The integrated database is DynamoDB.
+Here, the Vaadin Security tutorial is packaged into a module that can easily be added to any existing spring application. The integrated database is DynamoDB.
 
 https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security
+
+Please check the code before assuming it's secure.
 
 ## Functional Overview
 
@@ -12,7 +14,7 @@ https://vaadin.com/learn/tutorials/securing-your-app-with-spring-security
 * Creates a temp user if no users are found on the table. usr=admin, pw=admin (does not force deletion of temp user.)
 * Ensures at least one user must always have the role ADMIN.
 * Provides a UI view that allows ADMIN's to invite other users and assign them suitable ROLES. (Roles dependent on the developers view specification)
-* Allows developers to bolt on security then define the specific roles as they develop each application view. Or use a HasViewAuthorisation interface to control access to views. The latter allowing decoupling security from the view.
+* Allows developers to bolt on security then define the specific roles as they develop each application view.
 
 For Simplicity, it does not,
 
@@ -22,6 +24,7 @@ For Simplicity, it does not,
 
 ## How to use
 
+* Clone Git, open in eclipse and install via Maven or import to an existing project directly.
 * Simply add the dependency to the application POM.
 * Add the spring annotations, (@ComponentScan(), @EnableVaadin()).
 * Add an authorized IAM user to connect to DynamoDB, preferably using an ENV variable.
@@ -36,7 +39,7 @@ Step 1 - setting-up-spring-security
 
 * Didn’t use the two maven repos, just a signle spring spring-boot-starter-security
 * Didn’t use the ErrorMVCAutoConfiguration.class, not sure what this did.
-* Didn't use anyRequest permited, as vaadin takes care of auth.
+* Didn't use anyRequest authenticated, as vaadin takes care of auth.
 * SecurityConfiguration.class - Added a check for the datasource approved users and if not present an Admin is created.
 
 Step 5 - fine-grained-access-control
