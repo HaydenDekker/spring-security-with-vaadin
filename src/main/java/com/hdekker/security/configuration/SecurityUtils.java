@@ -90,7 +90,7 @@ public final class SecurityUtils {
 	 *   declare static config in a top level module.
 	 * 
 	 * 
-	 * @param securedClass
+	 * @param securedClass 
 	 * @return
 	 */
 	public static boolean isAccessGranted(Class<?> securedClass) {
