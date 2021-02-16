@@ -8,6 +8,17 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.vaadin.flow.spring.annotation.VaadinSessionScope;
 
+/**
+ * This session scoped bean should hold the last
+ * requested route that the user was not authorised
+ * to view.
+ * 
+ * Spring success listener uses this to forward the
+ * user after the login event occurs.
+ * 
+ * @author HDekker
+ *
+ */
 @Component
 //@VaadinSessionScope
 @Scope(value = WebApplicationContext.SCOPE_SESSION)

@@ -1,6 +1,6 @@
 # Security Module for Spring Vaadin 14 Projects
 
-Add a simple application security in a few simple steps.
+Add application security in a few simple steps.
 
 Here, the Vaadin Security tutorial is packaged into a module that can easily be added to any existing spring application. The integrated database is DynamoDB.
 
@@ -15,6 +15,7 @@ Please check the code before assuming it's secure.
 * Ensures at least one user must always have the role ADMIN.
 * Provides a UI view that allows ADMIN's to invite other users and assign them suitable ROLES. (Roles dependent on the developers view specification)
 * Allows developers to bolt on security then define the specific roles as they develop each application view.
+* Admin's control user passwords and other account detail.
 
 For Simplicity, it does not,
 
@@ -31,6 +32,8 @@ For Simplicity, it does not,
 * Manually create and declare the DynamoDB table in AWS. (Better control IAM user privilege)
 * Add secure routes and the required roles as you develop views using SecurityUtils static add method.
 * Change master admin password - First time application start, if no users exist in AWS table app will create a temporary ADMIN password.
+* Add the preconfigured LogoutButton to any view of your choice to easily allow users to logout.
+* Add the configuration specified in the ..... application.properties example.. or compiled spring properties file.
 
 
 ## Deviation from Tutorial

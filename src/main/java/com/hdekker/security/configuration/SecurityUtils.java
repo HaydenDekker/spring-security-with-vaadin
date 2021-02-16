@@ -1,5 +1,6 @@
 package com.hdekker.security.configuration;
 
+import com.hdekker.security.routes.LoginView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.server.HandlerHelper.RequestType;
 import com.vaadin.flow.server.VaadinSession;
@@ -27,6 +28,40 @@ import java.util.stream.Stream;
  *
  */
 public final class SecurityUtils {
+	
+	public static String[] staticResources = {
+			
+			// Vaadin Flow static resources
+			"/VAADIN/**",
+
+			// the standard favicon URI
+			"/favicon.ico",
+
+			// the robots exclusion standard
+			"/robots.txt",
+
+			// web application manifest
+			"/manifest.webmanifest",
+			"/sw.js",
+			"/offline-page.html",
+
+			// icons and images
+			"/icons/**",
+			"/images/**",
+
+			// (development mode) static resources
+			"/frontend/**",
+
+			// (development mode) webjars
+			"/webjars/**",
+
+			// (development mode) H2 debugging console
+			"/h2-console/**",
+
+			// (production mode) static resources
+			"/frontend-es5/**", "/frontend-es6/**"
+			
+	};
 	
 	private static Map<Class<? extends Component>, List<String>> viewAuth = new HashMap<>();
 	
@@ -95,8 +130,11 @@ public final class SecurityUtils {
 	 */
 	public static boolean isAccessGranted(Class<?> securedClass) {
 		
+		// TODO feel like this stuffed somehing.
+		if(securedClass.equals(LoginView.class)) return true;
+		
 	    // Allow if no roles are required.
-		if (!viewAuth.containsKey(securedClass)) {
+		if (!viewAuth.containsKey(securedClass)) { 
 	       return false;
 	    }
 

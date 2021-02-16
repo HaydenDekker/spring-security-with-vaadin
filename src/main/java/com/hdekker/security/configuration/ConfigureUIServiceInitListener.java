@@ -5,9 +5,11 @@ import com.hdekker.security.routes.LoginView;
 import com.vaadin.flow.component.UI;
 import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.NotFoundException;
+import com.vaadin.flow.router.RouteNotFoundError;
 import com.vaadin.flow.server.ServiceInitEvent;
 import com.vaadin.flow.server.VaadinServiceInitListener;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -19,6 +21,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class ConfigureUIServiceInitListener implements VaadinServiceInitListener {
 
+	
+	@Autowired
+	DeploymentPropertiess dps;
+	
 	/**
 	 * 
 	 */
@@ -31,9 +37,11 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 		log.debug("Step 1: Add a UIInitListener - A user has accessed the for first time and the Vaadin service initialised event has been called.");
 		event.getSource().addUIInitListener(uiEvent -> {
 			
-			log.debug("A new UI listener has been created. Adding a BeforeEnterListener to the UI to ensure security is checked.");
-			final UI ui = uiEvent.getUI();
-			ui.addBeforeEnterListener(this::beforeEnter);
+			if(dps.getEnableSecurity()) {
+				log.debug("A new UI listener has been created. Adding a BeforeEnterListener to the UI to ensure security is checked.");
+				final UI ui = uiEvent.getUI();
+				ui.addBeforeEnterListener(this::beforeEnter);
+			}
 			
 		});
 	}
@@ -56,7 +64,10 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 		
 		log.debug("User has attempted to enter " + event.getNavigationTarget().getCanonicalName() + " for UI " + UI.getCurrent().getUIId());
 		
-		UserRedirect ur = ctx.getBean(UserRedirect.class);
+		// User may not have the sw.js created that a server automatically
+		// requests.
+		if(event.getNavigationTarget().equals(RouteNotFoundError.class)
+				&& event.getLocation().getSegments().contains("sw.js")) return;
 		
 		if(!SecurityUtils.isAccessGranted(event.getNavigationTarget())) { 
 			if(SecurityUtils.isUserLoggedIn()) {
@@ -69,13 +80,16 @@ public class ConfigureUIServiceInitListener implements VaadinServiceInitListener
 				log.debug("NOT GRANTED - LOGGED IN.");
 				event.rerouteToError(NotFoundException.class);
 				return;
-			}else {
+			}else { 
 				
+				UserRedirect ur = ctx.getBean(UserRedirect.class);
+				// need to set the redirect to empty as it may have been set previously
+				ur.setOptRedirect(Optional.empty());
 				ur.setOptRedirect(Optional.of(event.getLocation().getPath()));
 				// TODO should Vaadin be granted when not logged in?? hmmm
 				log.debug("NOT GRANTED - NOT LOGGED IN.");
 				
-				event.rerouteTo(LoginView.class);
+				event.rerouteTo(LoginView.class); 
 				return;
 			}
 			

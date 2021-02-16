@@ -24,6 +24,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
+import com.hdekker.security.routes.AddUser;
 import com.hdekker.security.routes.ListAllUsers;
 import com.hdekker.security.routes.LoginView;
 import com.hdekker.security.services.UserService;
@@ -44,7 +45,7 @@ import com.hdekker.security.services.data.User;
 		private static final String LOGIN_PROCESSING_URL = "/login";
 		private static final String LOGIN_FAILURE_URL = "/login";
 		private static final String LOGIN_URL = "/login";
-		private static final String LOGOUT_SUCCESS_URL = "/login";
+		public static final String LOGOUT_SUCCESS_URL = "/login";
 		
 		public static final Boolean securityEnabled = true;
 		
@@ -77,18 +78,22 @@ import com.hdekker.security.services.data.User;
 				
 				// may not be set so go to home page if failed. TODO set this config.
 				UserRedirect ur = ctx.getBean(UserRedirect.class);
-				response.sendRedirect(ur.getOptRedirect().orElse("/"));
+				response.sendRedirect(ur.getOptRedirect().orElse(dp.getLoginSuccessRouteForDirectLoginPageNavigation()));
 				ur.setOptRedirect(Optional.empty());
 				
 			}
 		};
 	    
+		@Autowired
+		DeploymentPropertiess dp;
+		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			
 			// Configure auth for security module static views
 			SecurityUtils.addRouteAuthorisation(LoginView.class, Arrays.asList(SecurityBaseRoles.PUBLIC));
 			SecurityUtils.addRouteAuthorisation(ListAllUsers.class, Arrays.asList(SecurityBaseRoles.ADMIN));
+			SecurityUtils.addRouteAuthorisation(AddUser.class, Arrays.asList(SecurityBaseRoles.ADMIN));
 			
 			Integer users = userManagementService.getNumberOfUsers();
 			if(users.equals(0)) {
@@ -126,7 +131,7 @@ import com.hdekker.security.services.data.User;
 				.successHandler(success)
 
 				// Configure logout
-				.and().logout().logoutSuccessUrl(LOGOUT_SUCCESS_URL);
+				.and().logout().logoutSuccessUrl(dp.getLogoutSuccessTarget());
 			
 		}
 
@@ -137,35 +142,7 @@ import com.hdekker.security.services.data.User;
 		public void configure(WebSecurity web) throws Exception {
 		
 			web.ignoring().antMatchers(
-					// Vaadin Flow static resources
-					"/VAADIN/**",
-
-					// the standard favicon URI
-					"/favicon.ico",
-
-					// the robots exclusion standard
-					"/robots.txt",
-
-					// web application manifest
-					"/manifest.webmanifest",
-					"/sw.js",
-					"/offline-page.html",
-
-					// icons and images
-					"/icons/**",
-					"/images/**",
-
-					// (development mode) static resources
-					"/frontend/**",
-
-					// (development mode) webjars
-					"/webjars/**",
-
-					// (development mode) H2 debugging console
-					"/h2-console/**",
-
-					// (production mode) static resources
-					"/frontend-es5/**", "/frontend-es6/**");
+					SecurityUtils.staticResources);
 		}
 }
 	

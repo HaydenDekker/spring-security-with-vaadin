@@ -104,5 +104,11 @@ public class UserService {
 		return userRepository.findAllUsers();
 		
 	}
+
+	public void delete(String str) {
+		
+		userRepository.delete(str);
+		
+	}
 	
 }
